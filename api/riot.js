@@ -1,85 +1,78 @@
 export default async function handler(req, res) {
 
-    // Pegando os parâmetros enviados na URL
+  try {
+
+    // Pegando parâmetros da URL
     const { nick, tag, format } = req.query;
 
-    // Pegando a API KEY nas variáveis de ambiente da Vercel
-    const apiKey = process.env.RIOT_KEY;
-
-    try {
-
-        // Convertendo para formato seguro de URL
-        const nickEncoded = encodeURIComponent(nick);
-        const tagEncoded = encodeURIComponent(tag);
-
-        // =========================
-        // BUSCAR PUUID DO PLAYER
-        // =========================
-        const accountResponse = await fetch(
-            `https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${nickEncoded}/${tagEncoded}`,
-            {
-                headers: {
-                    "X-Riot-Token": apiKey
-                }
-            }
-        );
-
-        const accountData = await accountResponse.json();
-        const puuid = accountData.puuid;
-
-        // =========================
-        // BUSCAR ELO DO PLAYER
-        // =========================
-        const eloResponse = await fetch(
-            `https://br1.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}`,
-            {
-                headers: {
-                    "X-Riot-Token": apiKey
-                }
-            }
-        );
-
-        const eloData = await eloResponse.json();
-
-        const tier = eloData[0].tier;
-        const rank = eloData[0].rank;
-        const lp = eloData[0].leaguePoints;
-
-        // =========================
-        // FORMATAÇÃO DA RESPOSTA
-        // =========================
-
-        const message = `${accountData.gameName}: ${tier} ${rank} - ${lp} LP`;
-
-        // Se for StreamElements → retorna texto
-        if (format === "text") {
-
-            res.status(200).send(message);
-            return;
-
-        }
-
-        // Caso contrário → retorna JSON (para seu frontend)
-
-        res.status(200).json({
-            gameName: accountData.gameName,
-            tier,
-            rank,
-            lp
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        if (format === "text") {
-            res.status(500).send("Erro ao consultar elo.");
-            return;
-        }
-
-        res.status(500).json({ error: "Erro ao consultar API da Riot" });
-
+    if (!nick || !tag) {
+      return res.status(400).json({ error: "Nick e tag são obrigatórios" });
     }
+
+    // Chave da Riot salva nas variáveis da Vercel
+    const apiKey = process.env.RIOT_API_KEY;
+
+    // Codificando para URL
+    const nickEncoded = encodeURIComponent(nick);
+    const tagEncoded = encodeURIComponent(tag);
+
+    // =============================
+    // 1 - BUSCAR PUUID DO PLAYER
+    // =============================
+
+    const accountUrl =
+      `https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${nickEncoded}/${tagEncoded}?api_key=${apiKey}`;
+
+    const accountResponse = await fetch(accountUrl);
+    const accountData = await accountResponse.json();
+
+    const puuid = accountData.puuid;
+
+    // =============================
+    // 2 - BUSCAR ELO DO PLAYER
+    // =============================
+
+    const eloUrl =
+      `https://br1.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}?api_key=${apiKey}`;
+
+    const eloResponse = await fetch(eloUrl);
+    const eloData = await eloResponse.json();
+
+    const tier = eloData[0].tier;
+    const rank = eloData[0].rank;
+    const lp = eloData[0].leaguePoints;
+
+    // =============================
+    // RESPOSTA FORMATADA
+    // =============================
+
+    const message = `${accountData.gameName}: ${tier} ${rank} - ${lp} LP`;
+
+    // Cache para evitar muitas chamadas na Riot
+    res.setHeader("Cache-Control", "s-maxage=30");
+
+    // Se pedir texto (StreamElements)
+    if (format === "text") {
+      return res.status(200).send(message);
+    }
+
+    // Se não pedir texto (frontend)
+    return res.status(200).json({
+      gameName: accountData.gameName,
+      tier,
+      rank,
+      lp
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.status(500).json({
+      error: "Erro ao consultar API da Riot"
+    });
+
+  }
 }
 
 
