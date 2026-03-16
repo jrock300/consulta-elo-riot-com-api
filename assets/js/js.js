@@ -51,3 +51,4 @@ const executar = async () => {
 };
 
 btnBuscar.addEventListener('click', executar);
+btnLimpar.addEventListener('click', limpaCampos);
