@@ -2,6 +2,7 @@ const inputNick = document.querySelector('#inputNick');
 const inputTag = document.querySelector('#inputTag');
 const pCompleto = document.querySelector('#pCompleto');
 const btnBuscar = document.querySelector('#btnBuscar');
+const btnLimpar = document.querySelector('#btnLimpar');
 
 const mostraDados = (nickPlayer, tier, rank, lp) => {
     pCompleto.textContent = `${nickPlayer}: ${tier} ${rank} - ${lp} PDL`;

@@ -14,3 +14,13 @@
     border-radius: 8px;
     box-shadow: 2px 2px 2px #000;
 }
+
+#btnLimpar {
+    border: none;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    background-color: rgb(254, 73, 73);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 2px #000;
+}
