@@ -5,6 +5,32 @@
     text-align: center;
 }
 
+#inputNick {
+    padding: 8px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px #000;
+    border: 1px solid #000;
+    text-align: left;
+}
+
+#inputNick:focus {
+    outline: none;
+}
+
+#inputTag {
+    padding: 8px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px #000;
+    border: 1px solid #000;
+    max-width: 80px;
+    text-align: left;
+}
+
+#inputTag:focus {
+    outline: none;
+}
+
+
 #btnBuscar {
     border: none;
     color: #fff;
