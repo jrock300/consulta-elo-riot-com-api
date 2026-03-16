@@ -4,6 +4,11 @@ const pCompleto = document.querySelector('#pCompleto');
 const btnBuscar = document.querySelector('#btnBuscar');
 const btnLimpar = document.querySelector('#btnLimpar');
 
+const limpaCampos = () => {
+    inputNick.value = "";
+    inputTag.value = "";
+};
+
 const mostraDados = (nickPlayer, tier, rank, lp) => {
     pCompleto.textContent = `${nickPlayer}: ${tier} ${rank} - ${lp} PDL`;
 };
