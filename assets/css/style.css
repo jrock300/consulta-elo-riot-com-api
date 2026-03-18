@@ -50,3 +50,25 @@
     border-radius: 8px;
     box-shadow: 2px 2px 2px #000;
 }
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(1, 103, 1);
+}
+
+.box-elo {
+    background-color: rgb(167, 255, 167);
+    border: 1px solid rgb(0, 106, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#imgElo {
+    width: 100px;
+    margin-right: 30px;
+}
