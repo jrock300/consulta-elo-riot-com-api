@@ -21,6 +21,7 @@ const elos = {
 const limpaCampos = () => {
     inputNick.value = "";
     inputTag.value = "";
+    imgElo.src = "";
 };
 
 const mostraDados = (nickPlayer, tier, rank, lp) => {
@@ -43,6 +44,7 @@ const executar = async () => {
 
     if (!nick || !tag) {
         pCompleto.textContent = "Digite Nick e TAG.";
+        limpaCampos();
         return;
     }
 
@@ -66,10 +68,9 @@ const executar = async () => {
         );
 
     } catch (error) {
-
+        limpaCampos();
         console.error(error);
         pCompleto.textContent = "Erro ao consultar jogador.";
-
     }
 };
 
